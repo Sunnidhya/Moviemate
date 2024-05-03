@@ -35,6 +35,7 @@ def process():
         # Run the model.py script
         result = subprocess.run(['python', 'model.py', data_str], capture_output=True, text=True)
         
+        print(data_str)
         # Check if the subprocess was successful
         if result.returncode == 0:
             output = result.stdout.strip()

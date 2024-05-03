@@ -90,7 +90,9 @@ def main():
     # Iterate through the array of objects and construct movie information
     for item in data:
         movie_title = item.get('movie_title')
+        
         rating = float(item.get('rating'))
+        
         user_input_value = movie_title
         user_rating = rating
         user_movie_matrix.at[index_number, user_input_value] = user_rating
