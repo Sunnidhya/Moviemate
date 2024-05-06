@@ -7,15 +7,14 @@ import Footer from './Footer';
 
 const App = () => {
   return (
-    
-      <View style={styles.header}>
-        <Header title1="Moviemate" />
-        <Moviematebody />
-        
-        <Footer text="About Us" />
-      </View>
 
-    
+    <View style={styles.header}>
+      <Header title1="Moviemate"  />
+      <Moviematebody />
+      <Footer text="About Us" />
+    </View>
+
+
 
   );
 };
@@ -24,6 +23,7 @@ const styles = StyleSheet.create({
   header: {
     flex: 1,
     backgroundColor: 'white',
+    justifyContent:'center'
   },
 });
 
