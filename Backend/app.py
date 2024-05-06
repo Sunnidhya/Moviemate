@@ -7,7 +7,6 @@ from flask_cors import CORS,cross_origin
 
 app = Flask(__name__) 
 CORS(app)
-# CORS(app, resources={r"/listofmovies": {"origins": "http://192.168.2.169:5000"}})
 
 @app.route('/listofmovies',methods=['GET'])
 def list_of_movies():

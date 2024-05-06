@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, StatusBar } from 'react-native';
 
 const Header = ({ title1 }) => {
   return (
-    <View style={[styles.header,{height:40,paddingBottom:10}]}>
-      <StatusBar backgroundColor="#70A597" barStyle="light-content" /> 
-      <Text style={styles.headerText}>{title1}</Text>
+    <View style={[styles.header,{height:40,paddingBottom:10}]} testID='status-bar'>
+      <StatusBar backgroundColor="#70A597" barStyle="light-content"/> 
+      <Text style={styles.headerText} testID='text-bar'>{title1}</Text>
     </View>
   );
 };
