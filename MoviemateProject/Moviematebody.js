@@ -47,7 +47,7 @@ const Moviematebody = () => {
     axios(
       {
         method: "GET",
-        url: 'http://192.168.8.169:3000/listofmovies',
+        url: 'http://backend:3000/listofmovies',
         headers: {
           'Content-Type': 'application/json'
         }
@@ -82,7 +82,7 @@ const Moviematebody = () => {
         rating: ratings[index]
       }));
       console.log(dataToSend)
-      const response = await axios.post('http://192.168.8.169:3000/moviename', dataToSend, {
+      const response = await axios.post('http://backend:3000/moviename', dataToSend, {
         headers: {
           'Content-Type': 'application/json'
         }
