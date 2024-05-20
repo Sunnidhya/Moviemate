@@ -14,7 +14,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Use checkout scm which uses the credentials configured in the SCM section of the Jenkins job
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']],
+                checkout([$class: 'GitSCM', branches: [[name: 'main']],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [],
                     userRemoteConfigs: [[url: 'https://github.com/Sunnidhya/Moviemate.git', credentialsId: env.GIT_CREDENTIALS]]
