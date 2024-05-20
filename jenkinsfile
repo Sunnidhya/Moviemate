@@ -4,7 +4,7 @@ pipeline {
         DOCKER_IMAGE_NAME_FRONTEND = 'spefrontend1'
         DOCKER_IMAGE_NAME_BACKEND = 'spebackend3'
         GITHUB_REPO_URL = 'https://github.com/samarpita-bhaumik/Moviemate.git'
-        GIT_CREDENTIALS = 'mm'
+        GIT_CREDENTIALS = 'mmProj'
         LANG = 'en_US.UTF-8'
         LC_ALL = 'en_US.UTF-8'
     }
