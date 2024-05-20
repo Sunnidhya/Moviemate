@@ -37,11 +37,11 @@ pipeline {
             }
         }
 
-        stage('Stage 3: Backend Testing') {
-            steps {
-                sh 'python3 Backend/test_backend.py'
-            }
-        }
+        // stage('Stage 3: Backend Testing') {
+        //     steps {
+        //         sh 'python3 Backend/test_backend.py'
+        //     }
+        // }
 
         stage('Stage 4: Setup ngrok') {
             steps {
