@@ -34,9 +34,6 @@ pipeline {
                 
                 // Install Flask using pip
                 sh 'pip3 install Flask'
-                
-                // Verify Flask installation
-                sh 'Flask --version'
             }
         }
 
