@@ -19,7 +19,7 @@ pipeline {
         }
         stage('Stage 2: Prepare Environment') {
             steps {
-                sh 'sudo apt update'
+                sh 'echo 16031996 | sudo -S apt update'
                 sh 'chmod -R +r MoviemateProject Backend'
                 sh 'ls -l MoviemateProject'
                 sh 'ls -l Backend'
