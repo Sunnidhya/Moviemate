@@ -27,7 +27,7 @@ pipeline {
         }
         stage('Stage 3: Backend Testing') {
             steps {
-                sh 'python Backend/test_backend.py'
+                sh 'python3 Backend/test_backend.py'
             }
         }
 
