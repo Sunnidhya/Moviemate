@@ -25,6 +25,21 @@ pipeline {
                 sh 'ls -l Backend'
             }
         }
+
+        stage('Install Flask') {
+            steps {
+                // Activate a virtual environment (optional)
+                sh 'python3 -m venv myenv'
+                sh 'source myenv/bin/activate'
+                
+                // Install Flask using pip
+                sh 'pip install Flask'
+                
+                // Verify Flask installation
+                sh 'flask --version'
+            }
+        }
+
         stage('Stage 3: Backend Testing') {
             steps {
                 sh 'python3 Backend/test_backend.py'
