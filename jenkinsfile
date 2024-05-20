@@ -4,15 +4,27 @@ pipeline {
         DOCKER_IMAGE_NAME_FRONTEND = 'spefrontend1'
         DOCKER_IMAGE_NAME_BACKEND = 'spebackend3'
         GITHUB_REPO_URL = 'https://github.com/samarpita-bhaumik/Moviemate.git'
+        GIT_CREDENTIALS = 'mm'
         // DOCKERHUB_USERNAME = 'roysun96'
         // DOCKERHUB_PASSWORD = 'Sr@16031996'
         LANG = 'en_US.UTF-8'
         LC_ALL = 'en_US.UTF-8'
     }
     stages {
+        stage('Checkout') {
+            steps {
+                // Use checkout scm which uses the credentials configured in the SCM section of the Jenkins job
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [],
+                    userRemoteConfigs: [[url: 'https://github.com/Sunnidhya/Moviemate.git', credentialsId: env.GIT_CREDENTIALS]]
+                ])
+            }
+        }
         stage('Stage 1: Git Clone') {
             steps {
-                git branch: 'main', url: "${GITHUB_REPO_URL}"
+                // Explicitly specify credentials for git step
+                git url: 'https://github.com/samarpita-bhaumik/Moviemate.git', credentialsId: env.GIT_CREDENTIALS
             }
         }
         stage('Stage 2:Prepare Environment') {
