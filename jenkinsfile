@@ -33,7 +33,7 @@ pipeline {
                 sh 'sudo apt install -y python3 python3-pip'
                 
                 // Install Flask using pip
-                sh 'pip3 install Flask'
+                sh 'pip3 install Flask pandas'
             }
         }
 
