@@ -5,29 +5,19 @@ pipeline {
         DOCKER_IMAGE_NAME_BACKEND = 'spebackend3'
         GITHUB_REPO_URL = 'https://github.com/samarpita-bhaumik/Moviemate.git'
         GIT_CREDENTIALS = 'mm'
-        // DOCKERHUB_USERNAME = 'roysun96'
-        // DOCKERHUB_PASSWORD = 'Sr@16031996'
         LANG = 'en_US.UTF-8'
         LC_ALL = 'en_US.UTF-8'
     }
     stages {
         stage('Checkout') {
             steps {
-                // Use checkout scm which uses the credentials configured in the SCM section of the Jenkins job
+                // Checkout the repository using GitSCM plugin with specified credentials
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']],
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [],
-                    userRemoteConfigs: [[url: 'https://github.com/Sunnidhya/Moviemate.git', credentialsId: env.GIT_CREDENTIALS]]
+                    userRemoteConfigs: [[url: env.GITHUB_REPO_URL, credentialsId: env.GIT_CREDENTIALS]]
                 ])
             }
         }
-        stage('Stage 1: Git Clone') {
-            steps {
-                // Explicitly specify credentials for git step
-                git url: 'https://github.com/samarpita-bhaumik/Moviemate.git', credentialsId: env.GIT_CREDENTIALS
-            }
-        }
-        stage('Stage 2:Prepare Environment') {
+        stage('Stage 2: Prepare Environment') {
             steps {
                 sh 'sudo apt update'
                 sh 'chmod -R +r MoviemateProject Backend'
@@ -35,13 +25,13 @@ pipeline {
                 sh 'ls -l Backend'
             }
         }
-        stage('Stage 3:Backend testing') {
+        stage('Stage 3: Backend Testing') {
             steps {
                 sh 'python Backend/test_backend.py'
             }
         }
 
-        stage('Stage 4:Setup ngrok') {
+        stage('Stage 4: Setup ngrok') {
             steps {
                 script {
                     // Write ngrok configuration to a file
@@ -49,7 +39,7 @@ pipeline {
                 }
             }
         }
-        stage('Stage 5:Start ngrok') {
+        stage('Stage 5: Start ngrok') {
             steps {
                 script {
                     // Start ngrok in the background
@@ -58,7 +48,7 @@ pipeline {
                 }
             }
         }
-        stage('Stage 6:Get ngrok URL') {
+        stage('Stage 6: Get ngrok URL') {
             steps {
                 script {
                     // Get the ngrok URL
@@ -73,31 +63,36 @@ pipeline {
             }
         }
 
-        stage('Stage 7:Build Frontend Image') {
+        stage('Stage 7: Build Frontend Image') {
             steps {
-                sh 'sudo docker build -t '
+                // Build frontend Docker image
+                sh "sudo docker build -t ${DOCKER_IMAGE_NAME_FRONTEND} MoviemateProject"
             }
         }
        
-        stage('Stage 8:Build Backend Image'){
-            steps{
-                sh 'sudo docker build -t '
+        stage('Stage 8: Build Backend Image') {
+            steps {
+                // Build backend Docker image
+                sh "sudo docker build -t ${DOCKER_IMAGE_NAME_BACKEND} Backend"
             }
         }
-        stage('Stage 9: Push image to DockerHub') {
+        stage('Stage 9: Push Image to DockerHub') {
             steps {
                 script {
-                        sh "docker login "
-                        sh 'docker push  '
-                        sh "docker push "
+                    // Log in to DockerHub
+                    sh "docker login -u your-dockerhub-username -p your-dockerhub-password"
                     
+                    // Push frontend and backend images to DockerHub
+                    sh "docker push ${DOCKER_IMAGE_NAME_FRONTEND}"
+                    sh "docker push ${DOCKER_IMAGE_NAME_BACKEND}"
                 }
             }
         }
         
-         stage('Stage 10: Clean Docker Images') {
+        stage('Stage 10: Clean Docker Images') {
             steps {
                 script {
+                    // Prune unused Docker containers and images
                     sh 'docker container prune -f'
                     sh 'docker image prune -f'
                 }
@@ -107,16 +102,10 @@ pipeline {
         stage('Stage 11: Ansible Deployment') {
             steps {
                 script { 
-                    sh 'ansible-playbook -i inventory.yaml  moviemateDeploy.yaml'
+                    // Execute Ansible playbook for deployment
+                    sh 'ansible-playbook -i inventory.yaml moviemateDeploy.yaml'
                 }
             }
         }
-
-
-
-
-       
-
-
     }
 }
