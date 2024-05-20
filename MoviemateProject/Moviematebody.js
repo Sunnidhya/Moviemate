@@ -47,8 +47,6 @@ const Moviematebody = () => {
   }, []);
 
   const fetchMoviesData = async () => {
-    let value = `${backendUrl}/listofmovies`
-    console.warn("URL", value)
     axios(
       {
         method: "GET",
@@ -86,8 +84,6 @@ const Moviematebody = () => {
         movie: movie,
         rating: ratings[index]
       }));
-      let value = `${backendUrl}/listofmovies`
-      console.warn("URL", value)
       console.log(dataToSend)
       const response = await axios.post(`${backendUrl}/moviename`, dataToSend, {
         headers: {
