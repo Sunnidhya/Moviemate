@@ -5,6 +5,9 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import Footer from './Footer';
 import GoogleSearchLink from './GoogleSearchLink';
 
+// Use the internal Docker network address
+const backendUrl = 'http://localhost:5000';
+
 const Moviematebody = () => {
   const [text, setText] = useState('');
   const [value, setValue] = useState(0);
@@ -44,10 +47,12 @@ const Moviematebody = () => {
   }, []);
 
   const fetchMoviesData = async () => {
+    let value = `${backendUrl}/listofmovies`
+    console.warn("URL", value)
     axios(
       {
         method: "GET",
-        url: 'http://backend:3000/listofmovies',
+        url: `${backendUrl}/listofmovies`,
         headers: {
           'Content-Type': 'application/json'
         }
@@ -81,8 +86,10 @@ const Moviematebody = () => {
         movie: movie,
         rating: ratings[index]
       }));
+      let value = `${backendUrl}/listofmovies`
+      console.warn("URL", value)
       console.log(dataToSend)
-      const response = await axios.post('http://backend:3000/moviename', dataToSend, {
+      const response = await axios.post(`${backendUrl}/moviename`, dataToSend, {
         headers: {
           'Content-Type': 'application/json'
         }

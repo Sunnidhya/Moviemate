@@ -17,7 +17,8 @@ COPY . .
 RUN npm install --force && \
     npm install -g expo-cli && \
     npm install -g @expo/ngrok@^4.1.0 && \
-    npm install react-native-svg@14.1.0 --force
+    npm install react-native-svg@14.1.0 --force \
+    npm install expo-build-properties@0.11.1 --force
 
 # Perform expo login (replace "your_username" and "your_password" with actual credentials)
 RUN expo login -u samarpitabhaumik2017@gmail.com -p Sunnidhya1@
@@ -25,6 +26,7 @@ RUN expo login -u samarpitabhaumik2017@gmail.com -p Sunnidhya1@
 # Expose ports for Expo DevTools and Metro Bundler
 EXPOSE 19000
 EXPOSE 19001
+EXPOSE 8081
 
 # Define default command to start the application
 CMD ["npx","expo", "start", "--tunnel"]
