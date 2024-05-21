@@ -41,7 +41,7 @@ pipeline {
             steps {
                 script {
                 // Start the Flask server in the background
-                sh 'python3 Backend/app.py & sleep 40' // Give Flask some time to start (adjust as needed)
+                sh 'python3 Backend/app.py' // Give Flask some time to start (adjust as needed)
         }
             }
         }
@@ -49,12 +49,13 @@ pipeline {
         stage('Backend Testing') {
             steps {
                 script {
-                    try {
+                    // try {
                         sh 'python3 Backend/test_backend.py'
-                    } finally {
-                        // Ensure the Flask server is stopped after tests
-                        sh 'pkill -f "python3 Backend/app.py"'
-                    }
+                    // }
+                    // } finally {
+                    //     // Ensure the Flask server is stopped after tests
+                    //     sh 'pkill -f "python3 Backend/app.py"'
+                    // }
                 }
             }
         }
