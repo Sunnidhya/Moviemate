@@ -5,6 +5,9 @@ pipeline {
         DOCKER_IMAGE_NAME_BACKEND = 'spebackend3'
         GITHUB_REPO_URL = 'https://github.com/samarpita-bhaumik/Moviemate.git'
         GIT_CREDENTIALS = 'mmProj'
+        DOCKER_HUB_USERNAME = 'samsun0196'
+        DOCKER_HUB_PASSWORD = 'Sr@16031996'
+        DOCKER_HUB_CREDENTIALS = 'Dockerhub_creds_samsun'
         LANG = 'en_US.UTF-8'
         LC_ALL = 'en_US.UTF-8'
     }
@@ -115,6 +118,7 @@ pipeline {
             steps {
                 // Build frontend Docker image
                 sh "sudo docker build -t ${DOCKER_IMAGE_NAME_FRONTEND} MoviemateProject"
+                sh "sudo docker tag ${DOCKER_IMAGE_NAME_FRONTEND}:latest ${DOCKER_HUB_USERNAME}/${DOCKER_IMAGE_NAME_FRONTEND}:latest"
             }
         }
        
@@ -122,17 +126,20 @@ pipeline {
             steps {
                 // Build backend Docker image
                 sh "sudo docker build -t ${DOCKER_IMAGE_NAME_BACKEND} Backend"
+                sh "sudo docker tag ${DOCKER_IMAGE_NAME_BACKEND}:latest ${DOCKER_HUB_USERNAME}/${DOCKER_IMAGE_NAME_BACKEND}:latest"
             }
         }
         stage('Stage 9: Push Image to DockerHub') {
             steps {
                 script {
-                    // Log in to DockerHub
-                    sh "docker login -u samsun0196 -p Sr@16031996"
-                    
-                    // Push frontend and backend images to DockerHub
-                    sh "docker push ${DOCKER_IMAGE_NAME_FRONTEND}"
-                    sh "docker push ${DOCKER_IMAGE_NAME_BACKEND}"
+                    withCredentials([usernamePassword(credentialsId: env.DOCKER_HUB_CREDENTIALS, usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                        // Log in to DockerHub
+                        sh "echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USERNAME} --password-stdin"
+                        
+                        // Push frontend and backend images to DockerHub
+                        sh "docker push ${DOCKER_HUB_USERNAME}/${DOCKER_IMAGE_NAME_FRONTEND}:latest"
+                        sh "docker push ${DOCKER_HUB_USERNAME}/${DOCKER_IMAGE_NAME_BACKEND}:latest"
+                    }
                 }
             }
         }
