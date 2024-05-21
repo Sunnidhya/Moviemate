@@ -6,7 +6,7 @@ from app import app
 class TestBackend(unittest.TestCase):
 
     def test_list_of_movies(self):
-        response = requests.get('http://192.168.8.169:3000/listofmovies')
+        response = requests.get('http://localhost:5000/listofmovies')
         
         self.assertEqual(response.status_code, 200)
         data = response.json()
@@ -24,7 +24,7 @@ class TestBackend(unittest.TestCase):
             }]
         )
         headers = {'Content-Type': 'application/json'}
-        response = requests.post('http://192.168.8.169:3000/moviename', data=payload, headers=headers)
+        response = requests.post('http://localhost:5000/moviename', data=payload, headers=headers)
         self.assertEqual(response.status_code, 200)
         print("Response from /moviename endpoint:", response.text)
         
