@@ -1,21 +1,6 @@
 version: '3.7'
 
 services:
-  backend:
-    image: samsun0196/spebackend3:latest
-    ports:
-      - "127.0.0.1:5000:5000"
-    networks:
-      - moviemate
-
-  frontend:
-    image: samsun0196/spefrontend1:latest
-    ports:
-      - "127.0.0.1:8081:8081"
-    networks:
-      - moviemate
-    depends_on:
-      - backend
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch: 7.17.4
@@ -25,9 +10,7 @@ services:
       - "9200:9200"
       - "9300:9300"
     networks:
-      - moviemate
-    depends_on:
-      - frontend
+      - elk
 
   logstash:
     image: docker.elastic.co/logstash/logstash: 7.17.4
@@ -38,21 +21,20 @@ services:
       - "6000:6000/tcp"
       - "9600:9600"
     networks:
-      - moviemate
+      - elk
     depends_on:
       - elasticsearch
 
   kibana:
     image: docker.elastic.co/kibana/kibana: 7.17.4
     volumes:
-      - ./kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
+      - /kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
     ports:
       - "5601:5601"
     networks:
-      - moviemate
+      - elk
     depends_on:
       - elasticsearch
-
 networks:
-  moviemate:
+  elk:
     driver: bridge
