@@ -20,7 +20,7 @@ pipeline {
                 ])
             }
         }
-        stage('Prepare Environment') {
+        stage('Stage 2: Prepare Environment') {
             steps {
                 // sh 'sudo apt-get update'
                 sh 'chmod -R +r MoviemateProject Backend'
@@ -45,9 +45,9 @@ pipeline {
                 script {
                     // Start the Flask server in the background
                     dir('Backend') {
-                        sh 'nohup python3 app.py > /dev/null 2>&1 &'
-                        sleep 40 // Give Flask some time to start (adjust as needed)
-                    }
+                            sh 'nohup python3 app.py > /dev/null 2>&1 &'
+                    sleep 40 // Give Flask some time to start (adjust as needed)
+                        }
                 }
             }
         }
@@ -69,7 +69,54 @@ pipeline {
                 }
             }
         }
-        
+
+        stage('Setup ngrok') {
+            steps {
+                script {
+                    // Ensure the directory exists before writing the ngrok configuration file
+                    sh 'mkdir -p /var/lib/jenkins/.ngrok2'
+                    sh 'echo "authtoken: 2cGkRwBjSdrcSHpoKCNgqCqTvY4_2k3ore6rZvxLpw3SDZmwv" > /var/lib/jenkins/.ngrok2/ngrok.yml'
+                    sh 'ngrok config upgrade' // Upgrade ngrok configuration file
+                }
+            }
+        }
+        stage('Stage 5: Start ngrok') {
+            steps {
+                script {
+                    // Install screen if not already installed
+                    sh 'sudo apt-get install -y screen'
+                    
+                    // Start ngrok in a detached screen session
+                    sh 'screen -dmS ngrok_session ngrok http 5000'
+                    sleep 10 // Give ngrok some time to start and provide the URL
+                }
+            }
+        }
+
+        stage('Install jq') {
+            steps {
+                script {
+                    // Install jq
+                    sh 'sudo apt-get update && sudo apt-get install -y jq'
+                }
+            }
+        }
+
+        stage('Get ngrok URL') {
+            steps {
+                script {
+                    // Get the ngrok URL
+                    def ngrokUrl = sh(script: "curl -s http://127.0.0.1:4040/api/tunnels | jq -r .tunnels[0].public_url", returnStdout: true).trim()
+                    echo "ngrok URL: ${ngrokUrl}"
+                    
+                    // Replace the backendUrl in the frontend code
+                    sh """
+                        sed -i 's|http://localhost:5000|${ngrokUrl}|g' MoviemateProject/Moviematebody.js
+                    """
+                }
+            }
+        }
+
         stage('Stage 7: Build Frontend Image') {
             steps {
                 // Build frontend Docker image
@@ -115,41 +162,6 @@ pipeline {
                 script { 
                     // Execute Ansible playbook for deployment
                     sh 'ansible-playbook -i inventory.yaml moviemateDeploy.yaml'
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            script {
-                // Stop ngrok if it's running
-                sh 'pkill -f "ngrok" || true'
-            }
-        }
-    }
-
-    // Start ngrok outside of pipeline stages to ensure it continues running after pipeline finishes
-    stages {
-        stage('Setup ngrok') {
-            steps {
-                script {
-                    // Ensure the directory exists before writing the ngrok configuration file
-                    sh 'mkdir -p /var/lib/jenkins/.ngrok2'
-                    sh 'echo "authtoken: 2cGkRwBjSdrcSHpoKCNgqCqTvY4_2k3ore6rZvxLpw3SDZmwv" > /var/lib/jenkins/.ngrok2/ngrok.yml'
-                    sh 'ngrok config upgrade' // Upgrade ngrok configuration file
-                }
-            }
-        }
-        stage('Start ngrok') {
-            steps {
-                script {
-                    // Install screen if not already installed
-                    sh 'sudo apt-get install -y screen'
-                    
-                    // Start ngrok in a detached screen session
-                    sh 'screen -dmS ngrok_session ngrok http 5000'
-                    sleep 10 // Give ngrok some time to start and provide the URL
                 }
             }
         }
