@@ -67,11 +67,12 @@ pipeline {
             }
         }
 
-        stage('Stage 4: Setup ngrok') {
+        stage('Setup ngrok') {
             steps {
                 script {
-                    // Write ngrok configuration to a file
-                    sh 'echo "authtoken: 2cGkRwBjSdrcSHpoKCNgqCqTvY4_2k3ore6rZvxLpw3SDZmwv" > ~/.ngrok2/ngrok.yml'
+                    // Ensure the directory exists before writing the ngrok configuration file
+                    sh 'mkdir -p /var/lib/jenkins/.ngrok2'
+                    sh 'echo "authtoken: 2cGkRwBjSdrcSHpoKCNgqCqTvY4_2k3ore6rZvxLpw3SDZmwv" > /var/lib/jenkins/.ngrok2/ngrok.yml'
                 }
             }
         }
