@@ -1,7 +1,8 @@
 import unittest
 import requests
 import json
-from app import app
+from __main__ import app
+# from app import app
 
 class TestBackend(unittest.TestCase):
 
