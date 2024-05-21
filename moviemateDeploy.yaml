@@ -27,4 +27,6 @@
 
 
     - name: Run Docker Compose
-      command: "nohup docker-compose -f {{ compose_dest }} up &"
+      command: "nohup docker-compose -f {{ compose_dest }} up"
+      async: 0
+      poll: 0
