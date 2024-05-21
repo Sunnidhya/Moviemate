@@ -62,8 +62,8 @@ def send_top_k_movies(top_recommended_movies_genre, k):
 def main():
     
     
-    df_new= pd.read_csv("./merged_data.csv")
-    df_movies= pd.read_csv("./df_movies.csv")
+    df_new= pd.read_csv("Backend/merged_data.csv")
+    df_movies= pd.read_csv("Backend/df_movies.csv")
     
     
     
