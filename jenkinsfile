@@ -83,8 +83,11 @@ pipeline {
         stage('Stage 5: Start ngrok') {
             steps {
                 script {
-                    // Start ngrok in the background
-                    sh 'nohup ngrok http 5000 &'
+                    // Install screen if not already installed
+                    sh 'sudo apt-get install -y screen'
+                    
+                    // Start ngrok in a detached screen session
+                    sh 'screen -dmS ngrok_session ngrok http 5000'
                     sleep 10 // Give ngrok some time to start and provide the URL
                 }
             }
