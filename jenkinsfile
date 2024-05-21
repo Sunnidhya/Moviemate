@@ -73,6 +73,7 @@ pipeline {
                     // Ensure the directory exists before writing the ngrok configuration file
                     sh 'mkdir -p /var/lib/jenkins/.ngrok2'
                     sh 'echo "authtoken: 2cGkRwBjSdrcSHpoKCNgqCqTvY4_2k3ore6rZvxLpw3SDZmwv" > /var/lib/jenkins/.ngrok2/ngrok.yml'
+                    sh 'ngrok config upgrade' // Upgrade ngrok configuration file
                 }
             }
         }
@@ -95,7 +96,7 @@ pipeline {
             }
         }
 
-        stage('Stage 6: Get ngrok URL') {
+        stage('Get ngrok URL') {
             steps {
                 script {
                     // Get the ngrok URL
