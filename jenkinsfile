@@ -55,7 +55,7 @@ pipeline {
                     try {
                         // Change directory to Backend
                         dir('Backend') {
-                            sh 'python3 test_backend.py'
+                            sh 'python3 Backend/test_backend.py'
                         }
                     } finally {
                         // Ensure the Flask server is stopped after tests
