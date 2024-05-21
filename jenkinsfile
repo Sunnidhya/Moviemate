@@ -39,7 +39,7 @@ pipeline {
 
         stage('Stage 3: Backend Testing') {
             steps {
-                sh 'python3 -m Backend/test_backend.py'
+                sh 'python3 -m Backend/test_backend'
             }
         }
 
