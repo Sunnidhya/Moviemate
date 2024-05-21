@@ -85,6 +85,16 @@ pipeline {
                 }
             }
         }
+
+        stage('Install jq') {
+            steps {
+                script {
+                    // Install jq
+                    sh 'apt-get update && apt-get install -y jq'
+                }
+            }
+        }
+
         stage('Stage 6: Get ngrok URL') {
             steps {
                 script {
