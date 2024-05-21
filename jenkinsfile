@@ -42,7 +42,7 @@ pipeline {
                 script {
                     // Start the Flask server in the background
                     dir('Backend') {
-                            sh 'nohup python3 Backend/app.py > /dev/null 2>&1 &'
+                            sh 'nohup python3 app.py > /dev/null 2>&1 &'
                     sleep 40 // Give Flask some time to start (adjust as needed)
                         }
                 }
@@ -55,11 +55,13 @@ pipeline {
                     try {
                         // Change directory to Backend
                         dir('Backend') {
-                            sh 'python3 Backend/test_backend.py'
+                            sh 'python3 test_backend.py'
                         }
                     } finally {
                         // Ensure the Flask server is stopped after tests
-                        sh 'pkill -f "python3 Backend/app.py"'
+                        dir('Backend') {
+                            sh 'pkill -f "python3 app.py"'
+                        }
                     }
                 }
             }
