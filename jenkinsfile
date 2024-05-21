@@ -41,7 +41,7 @@ pipeline {
             steps {
                 script {
                 // Start the Flask server in the background
-                sh 'python3 Backend/app.py & sleep 40' // Give Flask some time to start (adjust as needed)
+                sh 'python3 Backend/app.py' // Give Flask some time to start (adjust as needed)
         }
             }
         }
