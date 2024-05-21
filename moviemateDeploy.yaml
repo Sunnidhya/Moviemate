@@ -27,4 +27,4 @@
 
 
     - name: Run Docker Compose
-      command: docker-compose -f "{{ compose_dest }}" up -d
+      command: docker-compose -f "{{ compose_dest }}" up
