@@ -33,7 +33,7 @@ def process():
         data_str = json.dumps(data)
         
         # Run the model.py script
-        result = subprocess.run(['python', 'model.py', data_str], capture_output=True, text=True)
+        result = subprocess.run(['python3', 'model.py', data_str], capture_output=True, text=True)
         
         print(data_str)
         # Check if the subprocess was successful
