@@ -11,7 +11,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 @app.route('/listofmovies',methods=['GET'])
 def list_of_movies():
     try:
-        df_movies = pd.read_csv('./df_movies.csv')
+        df_movies = pd.read_csv('df_movies.csv')
         
         # Convert DataFrame to a list of dictionaries
         movies_list = df_movies.to_dict(orient='records')
