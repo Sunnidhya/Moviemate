@@ -12,7 +12,7 @@ pipeline {
         LC_ALL = 'en_US.UTF-8'
     }
     stages {
-        stage('Checkout') {
+        stage('Stage 1: Checkout') {
             steps {
                 // Checkout the repository using GitSCM plugin with specified credentials
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']],
@@ -29,7 +29,7 @@ pipeline {
             }
         }
 
-        stage('Install Python and Flask') {
+        stage('Stage 3: Install Python and Flask') {
             steps {
                 // Update package index and install Python 3 and pip
                 sh 'sudo apt update'
@@ -40,7 +40,7 @@ pipeline {
             }
         }
 
-        stage('Start Flask Server') {
+        stage('Stage 4: Start Flask Server') {
             steps {
                 script {
                     // Start the Flask server in the background
@@ -52,7 +52,7 @@ pipeline {
             }
         }
 
-        stage('Backend Testing') {
+        stage('Stage 4: Backend Testing') {
             steps {
                 script {
                     try {
@@ -70,7 +70,7 @@ pipeline {
             }
         }
 
-        stage('Setup ngrok') {
+        stage('Stage 5: Setup ngrok') {
             steps {
                 script {
                     // Ensure the directory exists before writing the ngrok configuration file
@@ -80,7 +80,7 @@ pipeline {
                 }
             }
         }
-        stage('Stage 5: Start ngrok') {
+        stage('Stage 6: Start ngrok') {
             steps {
                 script {
                     // Install screen if not already installed
@@ -93,7 +93,7 @@ pipeline {
             }
         }
 
-        stage('Install jq') {
+        stage('Stage 7: Install jq') {
             steps {
                 script {
                     // Install jq
@@ -102,7 +102,7 @@ pipeline {
             }
         }
 
-        stage('Get ngrok URL') {
+        stage('Stage 8: Get ngrok URL') {
             steps {
                 script {
                     // Get the ngrok URL
@@ -117,7 +117,7 @@ pipeline {
             }
         }
 
-        stage('Stage 7: Build Frontend Image') {
+        stage('Stage 9: Build Frontend Image') {
             steps {
                 // Build frontend Docker image
                 sh "sudo docker build -t ${DOCKER_IMAGE_NAME_FRONTEND} MoviemateProject"
@@ -125,14 +125,14 @@ pipeline {
             }
         }
        
-        stage('Stage 8: Build Backend Image') {
+        stage('Stage 10: Build Backend Image') {
             steps {
                 // Build backend Docker image
                 sh "sudo docker build -t ${DOCKER_IMAGE_NAME_BACKEND} Backend"
                 sh "sudo docker tag ${DOCKER_IMAGE_NAME_BACKEND}:latest ${DOCKER_HUB_USERNAME}/${DOCKER_IMAGE_NAME_BACKEND}:latest"
             }
         }
-        stage('Stage 9: Push Image to DockerHub') {
+        stage('Stage 11: Push Image to DockerHub') {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: env.DOCKER_HUB_CREDENTIALS, usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
@@ -147,7 +147,7 @@ pipeline {
             }
         }
         
-        stage('Stage 10: Clean Docker Images') {
+        stage('Stage 12: Clean Docker Images') {
             steps {
                 script {
                     // Prune unused Docker containers and images
@@ -157,7 +157,7 @@ pipeline {
             }
         }
         
-        stage('Stage 11: Ansible Deployment') {
+        stage('Stage 14: Ansible Deployment') {
             steps {
                 script { 
                     // Execute Ansible playbook for deployment
