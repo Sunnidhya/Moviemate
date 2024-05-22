@@ -7,6 +7,7 @@ WORKDIR /app
 # Copy and install requirements
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install python-logstash-async
 
 # Copy the rest of the application code
 COPY . .

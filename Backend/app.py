@@ -1,50 +1,62 @@
-from flask import Flask, request
+# Flask application with logging setup
+from flask import Flask, request, jsonify
+import logging
+from logstash_async.handler import AsynchronousLogstashHandler
+from logstash_async.formatter import LogstashFormatter
 import subprocess
 import json
-import os
 import pandas as pd
-from flask import jsonify  # Import jsonify
-from flask_cors import CORS,cross_origin
+from flask_cors import CORS
 
-app = Flask(__name__) 
+app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-@app.route('/listofmovies',methods=['GET'])
+# Setup logger
+logger = logging.getLogger('app_logger')
+logger.setLevel(logging.DEBUG)  # Use DEBUG level for more verbose output
+
+# Setup Logstash handler
+logstash_handler = AsynchronousLogstashHandler(
+    host='logstash',  # Use the service name defined in docker-compose
+    port=6000,
+    database_path=None
+)
+logstash_formatter = LogstashFormatter()
+logstash_handler.setFormatter(logstash_formatter)
+logger.addHandler(logstash_handler)
+
+@app.route('/listofmovies', methods=['GET'])
 def list_of_movies():
     try:
         df_movies = pd.read_csv("df_movies.csv")
-        
-        # Convert DataFrame to a list of dictionaries
         movies_list = df_movies.to_dict(orient='records')
-        
-        # # Modify each dictionary to include 'id' and 'name' keys
-        # for movie in movies_list:
-        #     movie['Title'] = movie.pop('Title')  # Assuming 'Title' is the column name for movie names
-        
+        logger.info('Movies list retrieved successfully', extra={'movies': movies_list})
         return jsonify(movies_list)
     except Exception as e:
+        logger.error(f"Error retrieving movies list: {str(e)}")
         return f"An error occurred: {str(e)}", 500
-
 
 @app.route('/moviename', methods=['POST'])
 def process():
     try:
         data = request.get_json()
         data_str = json.dumps(data)
-        
-        # Run the model.py script
         result = subprocess.run(['python3', 'model.py', data_str], capture_output=True, text=True)
-        
-        print(data_str)
-        # Check if the subprocess was successful
+
         if result.returncode == 0:
             output = result.stdout.strip()
+            logger.info('Model executed successfully', extra={'output': output})
             return output
         else:
             error_output = f"Error executing model.py: {result.stderr.strip()}"
-            return error_output, 500 
+            logger.error(error_output)
+            return error_output, 500
     except Exception as e:
+        logger.error(f"Error processing request: {str(e)}")
         return f"An error occurred: {str(e)}", 500
 
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0', port = 5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
+
+
