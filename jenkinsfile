@@ -58,6 +58,7 @@ pipeline {
                     try {
                         // Change directory to Backend
                         dir('Backend') {
+                            sh 'pip install python-logstash-async'
                             sh 'python3 test_backend.py'
                         }
                     } finally {
