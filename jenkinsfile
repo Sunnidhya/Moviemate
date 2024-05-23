@@ -36,7 +36,7 @@ pipeline {
                 sh 'sudo apt install -y python3 python3-pip'
                 
                 // Install Flask using pip
-                sh 'pip3 install Flask pandas flask_cors requests'
+                sh 'pip3 install Flask pandas flask_cors requests python-logstash-async'
             }
         }
 
@@ -58,7 +58,6 @@ pipeline {
                     try {
                         // Change directory to Backend
                         dir('Backend') {
-                            sh 'pip install python-logstash-async'
                             sh 'python3 test_backend.py'
                         }
                     } finally {
