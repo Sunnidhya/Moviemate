@@ -35,4 +35,4 @@
         seconds: "{{ sleep_duration }}"
 
     - name: Stop Docker Compose
-      command: "docker-compose -f {{ compose_dest }} down
+      command: "docker-compose -f {{ compose_dest }} down
