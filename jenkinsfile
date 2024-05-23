@@ -161,10 +161,10 @@ pipeline {
             steps {
                 script { 
                     // Execute Ansible playbook for deployment
-                    def ansiblePlaybook = 'moviemateDeploy.yaml' // Name of your playbook file
-                    def playbookOutput = sh(script: "ansible-playbook -i inventory.yaml ${ansiblePlaybook}", returnStdout: true)
-                    echo playbookOutput
-                    // sh 'ansible-playbook -i inventory.yaml moviemateDeploy.yaml'
+                    // def ansiblePlaybook = 'moviemateDeploy.yaml' // Name of your playbook file
+                    // def playbookOutput = sh(script: "ansible-playbook -i inventory.yaml ${ansiblePlaybook}", returnStdout: true)
+                    // echo playbookOutput
+                    sh 'ansible-playbook -i inventory.yaml moviemateDeploy.yaml'
                 }
             }
         }
