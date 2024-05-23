@@ -6,6 +6,7 @@
   vars:
     compose_src: "docker-compose.yml"
     compose_dest: "docker-compose.yml"
+    sleep_duration: 1200  # 16 minutes in seconds
 
   tasks:
     - name: Copy Docker Compose file
@@ -27,4 +28,11 @@
 
 
     - name: Run Docker Compose
-      command: "docker-compose -f {{ compose_dest }} up -d"
+      command: "docker-compose -f {{ compose_dest }} up"
+
+    - name: Wait for the specified duration
+      pause:
+        seconds: "{{ sleep_duration }}"
+
+    - name: Stop Docker Compose
+      command: "docker-compose -f {{ compose_dest }} down
