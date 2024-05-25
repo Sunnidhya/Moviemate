@@ -6,7 +6,7 @@
   vars:
     compose_src: "docker-compose.yml"
     compose_dest: "docker-compose.yml"
-    sleep_duration: 480  # 8 minutes in seconds
+    sleep_duration: 600  # 10 minutes in seconds
 
   tasks:
     - name: Copy Docker Compose file
